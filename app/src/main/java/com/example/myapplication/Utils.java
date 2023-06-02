@@ -41,7 +41,7 @@ public class Utils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= 24) {
             // 兼容性提升
             imageUri = FileProvider.getUriForFile(activity,
                     "com.example.myapplication", outputImage);
