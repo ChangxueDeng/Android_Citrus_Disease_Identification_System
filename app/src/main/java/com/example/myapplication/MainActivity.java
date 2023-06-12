@@ -31,8 +31,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import org.pytorch.IValue;
+import org.pytorch.Tensor;
+import org.pytorch.torchvision.TensorImageUtils;
+
 
 public class MainActivity extends AppCompatActivity {
+
     Bitmap bitmap = null;
     String modelPath = null;
     private static final String TAG = "测试";
@@ -63,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
     private ImageView showOriginalImageView;
 
     private TextView showClsResultTextView;
+    private Tensor TensorinTensor;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
             // 开启相机，返回相机拍摄图像的路径，传入的请求码是START_CAMERA_CODE
             cameraImagePath = Utils.startCamera(MainActivity.this, START_CAMERA_CODE);
             Log.i(TAG, "onClick: " + cameraImagePath);
-
         }
     }
 
@@ -244,6 +252,63 @@ public void classing(String imgPth){
                 os.flush();
             }
             return file.getAbsolutePath();
+        }
+    }
+
+//    private void classify(String imagePath){
+//        //MobileNet 权重文件
+//        String ptPath = "mobile_net.pt";
+//        //设定输入维度
+//        int inDims[] = {150,150,3};
+//
+//        //省略模型加载与数据获取
+//
+//        //对输入图像预处理，获得输入张量
+//        float[] meanRGB = {0.485f,0.456f,0.406f};
+//        float[] stdRGB = {0.229f,0.224f,0.225f};
+//        Bitmap scaleBmp = null;
+//        TensorinTensor = TensorImageUtils.bitmapToFloat32Tensor(scaleBmp,meanRGB,stdRGB);
+//
+//        try {
+//            //进行分类计算
+//            TensorclsTensor = mobileNet.forward(IValue.from(inTensor)).toTensor();
+//            float[] clsArray = clsTensor.getDataAsFloatArray();
+//            softmax(clsArray);
+//
+//            //根据分类概率值，解析图像所属类别
+//            int[] top3id = getTopThree(clsArray);
+//
+//            //根据对应的4种图像分类，在文本框中显示前3种图像类别和对应概率值
+//            String[] cls = {"Citrus Black spot",
+//                    "Citrus Canker",
+//                    "Citrus Greening",
+//                    "Citrus Healthy"};
+//            String result = "Top 1:"+cls[top3id[0]]+","+String.valueOf(clsArray[top3id[0]]);
+//            result +="\n"+"Top 2:"+cls[top3id[1]]+","+String.valueOf(clsArray[top3id[1]]);
+//            result +="\n"+"Top 3:"+cls[top3id[2]]+","+String.valueOf(clsArray[top3id[2]]);
+//
+//            showClsResultTextView.setText(result);
+//        }catch (Exception e){
+//            Log.e("Log","fail to preform classify");
+//            e.printStackTrace();
+//        }
+//
+//
+//    }
+
+    private static void softmax(float[] arr){
+        float sumExp = 0.00001f;
+        for(int i=0;i<arr.length;i++){
+            sumExp += Math.exp(arr[i]);
+        }
+
+        for(int i=0;i<arr.length;i++){
+            arr[i] = (float) (Math.exp(arr[i])/sumExp);
+            //保留四位有效数字
+            arr[i] = ((int )(arr[i]*10000))/10000.0f;
+            if(arr[i]<0.0001f){
+                arr[i] = 0.0001f;
+            }
         }
     }
 

@@ -40,22 +40,44 @@ public class Classifier {
         }
         return maxIndex;
     }
-//    public static void softmax(float arr[]){
-//        float sumExp = 0.00001f;
-//        for(int i = 0; i < arr.length; i++){
-//            sumExp += Math.exp(arr[i]);
-//        }
-//
-//        for(int i = 0; i < arr.length; i++){
-//            arr[i] = (float) (Math.exp(arr[i]) / sumExp);
-//            arr[i] = ((int)(arr[i] * 1000)) / 10000.0f;
-//            if(arr[i] < 0.0001f){
-//                arr[i] = 0.0001f;
-//            }
-//        }
-//        System.out.println(arr[0]);
-//    }
+    public static void softmax(float arr[]){
+        float sumExp = 0.00001f;
+        for(int i = 0; i < arr.length; i++){
+            sumExp += Math.exp(arr[i]);
+        }
 
+        for(int i = 0; i < arr.length; i++){
+            arr[i] = (float) (Math.exp(arr[i]) / sumExp);
+            arr[i] = ((int)(arr[i] * 1000)) / 10000.0f;
+            if(arr[i] < 0.0001f){
+                arr[i] = 0.0001f;
+            }
+        }
+        System.out.println(arr[0]);
+    }
+
+//    public int[] getTopThree(float arr[]){
+//
+//    }
+//
+//
+//    public String[] fenlei(Bitmap bitmap){
+//        //进行分类计算
+//        TensorclsTensor = mobileNet.forward(IValue.from(inTensor)).toTensor();
+//        float[] clsArray = clsTensor.getDataAsFloatArray();
+//        softmax(clsArray);
+//
+//        //根据分类概率值，解析图像所属类别
+//        int[] top3id = getTopThree(clsArray);
+//
+//        //根据对应的4种图像分类，在文本框中显示前3种图像类别和对应概率值
+//
+//        String result = "Top 1:"+cls[top3id[0]]+","+String.valueOf(clsArray[top3id[0]]);
+//        result +="\n"+"Top 2:"+cls[top3id[1]]+","+String.valueOf(clsArray[top3id[1]]);
+//        result +="\n"+"Top 3:"+cls[top3id[2]]+","+String.valueOf(clsArray[top3id[2]]);
+//
+//        showClsResultTextView.setText(result);
+//    }
 
     //预测函数
     public String imgPredict(Bitmap bitmap){

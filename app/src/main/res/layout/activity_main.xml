@@ -23,45 +23,58 @@
             android:layout_gravity="center"
             android:id="@+id/img"/>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_height="20dp"
+        android:layout_weight="0.5"
         android:orientation="vertical">
+
         <TextView
+            android:id="@+id/class_t"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/class_t"
-            android:text="分类结果:"/>
+            android:textSize="20sp"
+            android:text="分类结果:" />
+
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:id="@+id/classed"
-            android:text="/???"/>
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:textSize="50sp"
+            android:gravity="center_horizontal"
+            android:text="/???" />
+
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:orientation="horizontal">
+        android:layout_height="200dp"
+        android:gravity="center"
+        android:orientation="vertical">
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
+        android:gravity="center_horizontal"
         android:id="@+id/button1"
         android:layout_weight="1"
-        android:text="拍照"/>
+        android:text="拍照"
+        android:textSize="30sp"/>
+
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:id="@+id/button2"
         android:layout_weight="1"
+        android:textSize="30sp"
         android:text="相册"/>
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:id="@+id/button3"
         android:layout_weight="1"
+        android:textSize="30sp"
         android:text="分类"/>
     </LinearLayout>
 
