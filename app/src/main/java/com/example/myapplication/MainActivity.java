@@ -14,7 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.os.Build;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         btnStartPredict = (Button) findViewById(R.id.button3);
         btnStartPredict.setOnClickListener(new StartPredictOnClickListener());
 
+
         //  绑定我们在activity_main.xml中定义的Image_View
         showOriginalImageView = (ImageView) findViewById(R.id.img);
 
@@ -99,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
     class StartCameraOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            if(showClsResultTextView.getTextSize() > 0){
+                showClsResultTextView.setText("等待分类");
+            }
             // 开启相机，返回相机拍摄图像的路径，传入的请求码是START_CAMERA_CODE
             cameraImagePath = Utils.startCamera(MainActivity.this, START_CAMERA_CODE);
             Log.i(TAG, "onClick: " + cameraImagePath);
@@ -108,6 +112,9 @@ public class MainActivity extends AppCompatActivity {
     class StartAlbumOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            if(showClsResultTextView.getTextSize() > 0){
+                showClsResultTextView.setText("等待分类");
+            }
             // 调用相册，传入的请求码是START_ALBUM_CODE
             Utils.startAlbum(MainActivity.this, START_ALBUM_CODE);
         }
@@ -116,32 +123,43 @@ public class MainActivity extends AppCompatActivity {
     class StartPredictOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            classing(showImagePath);
+            if(!check_Img_Selected(showImagePath)){
+                Toast.makeText(MainActivity.this, "未拍摄照片或选择照片",Toast.LENGTH_LONG).show();
+            }
+            else classing(showImagePath);
         }
     }
 
-    // 请求本案例需要的三种权限
+    // 请求本案例需要的三种权限(添加对于安卓13的适配)
     private void requestPermissions() {
         // 定义容器，存储我们需要申请的权限
         List<String> permissionList = new ArrayList<>();
+        List<String> permissionList_33 = new ArrayList<>();
         // 检测应用是否具有CAMERA的权限
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             permissionList.add(Manifest.permission.CAMERA);
+            permissionList_33.add(Manifest.permission.CAMERA);
         }
         // 检测应用是否具有READ_EXTERNAL_STORAGE权限
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
-
         // 检测应用是否具有WRITE_EXTERNAL_STORAGE权限
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
-
-        // 如果permissionList不为空，则说明前面检测的三种权限中至少有一个是应用不具备的
-        // 则需要向用户申请使用permissionList中的权限
-        if (!permissionList.isEmpty()) {
+        // 检测应用是否具有READ_MEDIA_IMAGES权限,安卓13特性
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT >= 33){
+            permissionList_33.add(Manifest.permission.READ_MEDIA_IMAGES);
+        }
+        Log.i(TAG, "测试权限" + permissionList);
+        // 如果permissionList不为空，则说明前面检测的多个权限中至少有一个是应用不具备的
+        // 则需要向用户申请使用permissionList中的权限 一个用于安卓13以下，一个用于安卓13
+        if (Build.VERSION.SDK_INT < 33 && !permissionList.isEmpty()) {
             ActivityCompat.requestPermissions(this, permissionList.toArray(new String[permissionList.size()]), REQUIRE_PERMISSION_CODE);
+        }
+        else if(!permissionList_33.isEmpty() && Build.VERSION.SDK_INT >= 33){
+            ActivityCompat.requestPermissions(this, permissionList_33.toArray(new String[permissionList_33.size()]), REQUIRE_PERMISSION_CODE);
         }
     }
 
@@ -181,15 +199,17 @@ public class MainActivity extends AppCompatActivity {
                     albumImagePath = Utils.getPathFromUri(MainActivity.this, albumImageUri);
                     showImagePath = albumImagePath;
                     Bitmap bitmapAlbum = Utils.getScaleBitmapByPath(albumImagePath);
-                    showOriginalImageView.setImageBitmap(Utils.getScaleBitmapByBitmap(bitmapAlbum, 224, 224));
+                    //showOriginalImageView.setImageBitmap(Utils.getScaleBitmapByBitmap(bitmapAlbum,512,512));
+                    showOriginalImageView.setImageBitmap(bitmapAlbum);
                     Toast.makeText(MainActivity.this, "album start", Toast.LENGTH_LONG).show();
                     break;
                 case START_CAMERA_CODE:
                     Log.i(TAG, "使用相机拍摄的照片");
                     showImagePath = cameraImagePath;
                     Bitmap bitmapCamera = Utils.getScaleBitmapByPath(cameraImagePath);
+                    showOriginalImageView.setImageBitmap(bitmapCamera);
                     Toast.makeText(MainActivity.this, "camera start", Toast.LENGTH_LONG).show();
-                    showOriginalImageView.setImageBitmap(Utils.getScaleBitmapByBitmap(bitmapCamera, 224, 224));
+                    //showOriginalImageView.setImageBitmap(Utils.getScaleBitmapByBitmap(bitmapCamera, 512, 512));
                     break;
             }
         }
@@ -201,28 +221,36 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    //判断进行分类时是否选择图片
+    public boolean check_Img_Selected(String showImagePath){
+        if(showImagePath == null){
+            return false;
+        }
+        return true;
+    }
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
-public void classing(String imgPth){
-// 获取需要分类的图像
-    Bitmap bmp= null;
-    Bitmap scaledBmp = null;
-    // 设定输入维度
-    int inDims[] = {224, 224, 3};
-    try {
-        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(imgPth));
-        bmp = BitmapFactory.decodeStream(bis);
-        scaledBmp = Bitmap.createScaledBitmap(bmp, inDims[0], inDims[1], true);
-        bis.close();
-    } catch (Exception e) {
-        Log.d("LOG", "can not read image bitmap");
+    public void classing(String imgPth){
+    // 获取需要分类的图像
+        Bitmap bmp= null;
+        Bitmap scaledBmp = null;
+        // 设定输入维度
+        int inDims[] = {224, 224, 3};
+        try {
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(imgPth));
+            bmp = BitmapFactory.decodeStream(bis);
+            scaledBmp = Bitmap.createScaledBitmap(bmp, inDims[0], inDims[1], true);
+            bis.close();
+        } catch (Exception e) {
+            Log.d("LOG", "can not read image bitmap");
+        }
+        Classifier classifier = new Classifier(modelPath);
+        String ans = classifier.imgPredict(scaledBmp);
+        showClsResultTextView.setText(ans);
     }
-    Classifier classifier = new Classifier(modelPath);
-    String ans = classifier.imgPredict(scaledBmp);
-    showClsResultTextView.setText(ans);
-}
+
 //        //显示图片
 //        ImageView imageView = findViewById(R.id.image);
 //        imageView.setImageBitmap(bitmap);
