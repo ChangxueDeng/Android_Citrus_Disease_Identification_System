@@ -43,7 +43,7 @@
             android:layout_height="100dp"
             android:textSize="50sp"
             android:gravity="center_horizontal"
-            android:text="/???" />
+            android:text="" />
 
 
     </LinearLayout>
