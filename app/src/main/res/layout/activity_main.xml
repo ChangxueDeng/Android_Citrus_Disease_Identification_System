@@ -39,17 +39,11 @@
 
         <TextView
             android:id="@+id/classed"
-<<<<<<< HEAD
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:textSize="50sp"
+            android:textSize="40sp"
             android:gravity="center_horizontal"
-            android:text="" />
-
-
-=======
             android:text="等待分类"/>
->>>>>>> 2bbcd0d43209d4c2c3c94473c247e5a919e3a750
     </LinearLayout>
 
     <LinearLayout
@@ -73,13 +67,6 @@
         android:layout_weight="1"
         android:textSize="30sp"
         android:text="相册"/>
-    <Button
-        android:layout_width="300dp"
-        android:layout_height="match_parent"
-        android:id="@+id/button3"
-        android:layout_weight="1"
-        android:textSize="30sp"
-        android:text="分类"/>
     </LinearLayout>
 
 </LinearLayout>

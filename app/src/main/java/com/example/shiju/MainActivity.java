@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.shiju;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -31,9 +31,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import org.pytorch.IValue;
 import org.pytorch.Tensor;
-import org.pytorch.torchvision.TensorImageUtils;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -61,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
     private Button btnStartCamera;
     // 创建用于调用系统相册的按钮
     private Button btnStartAlbum;
-    // 创建用于启动pytorch前向推理的按钮
-    private Button btnStartPredict;
 
     // 创建ImageView对象
     private ImageView showOriginalImageView;
@@ -86,11 +82,7 @@ public class MainActivity extends AppCompatActivity {
         btnStartAlbum = (Button) findViewById(R.id.button2);
         btnStartAlbum.setOnClickListener(new StartAlbumOnClickListener());
 
-        btnStartPredict = (Button) findViewById(R.id.button3);
-        btnStartPredict.setOnClickListener(new StartPredictOnClickListener());
-
-
-        //  绑定我们在activity_main.xml中定义的Image_View
+        //  绑定我们在activity_main.xml中定义的Image_Viewa
         showOriginalImageView = (ImageView) findViewById(R.id.img);
 
         showClsResultTextView = (TextView)findViewById(R.id.classed);
@@ -105,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             }
             // 开启相机，返回相机拍摄图像的路径，传入的请求码是START_CAMERA_CODE
             cameraImagePath = Utils.startCamera(MainActivity.this, START_CAMERA_CODE);
-            Log.i(TAG, "onClick: " + cameraImagePath);
+
         }
     }
 
@@ -117,16 +109,6 @@ public class MainActivity extends AppCompatActivity {
             }
             // 调用相册，传入的请求码是START_ALBUM_CODE
             Utils.startAlbum(MainActivity.this, START_ALBUM_CODE);
-        }
-    }
-
-    class StartPredictOnClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            if(!check_Img_Selected(showImagePath)){
-                Toast.makeText(MainActivity.this, "未拍摄照片或选择照片",Toast.LENGTH_LONG).show();
-            }
-            else classing(showImagePath);
         }
     }
 
@@ -202,6 +184,9 @@ public class MainActivity extends AppCompatActivity {
                     //showOriginalImageView.setImageBitmap(Utils.getScaleBitmapByBitmap(bitmapAlbum,512,512));
                     showOriginalImageView.setImageBitmap(bitmapAlbum);
                     Toast.makeText(MainActivity.this, "album start", Toast.LENGTH_LONG).show();
+                    //图片路径存在则进行分类
+                    if(check_Img_Selected(showImagePath))classing(showImagePath);
+                    else Toast.makeText(MainActivity.this, "图片为空，请重新操作！",Toast.LENGTH_LONG).show();
                     break;
                 case START_CAMERA_CODE:
                     Log.i(TAG, "使用相机拍摄的照片");
@@ -209,6 +194,9 @@ public class MainActivity extends AppCompatActivity {
                     Bitmap bitmapCamera = Utils.getScaleBitmapByPath(cameraImagePath);
                     showOriginalImageView.setImageBitmap(bitmapCamera);
                     Toast.makeText(MainActivity.this, "camera start", Toast.LENGTH_LONG).show();
+                    //图片路径存在则进行分类
+                    if(check_Img_Selected(showImagePath))classing(showImagePath);
+                    else Toast.makeText(MainActivity.this, "图片为空，请重新操作！",Toast.LENGTH_LONG).show();
                     //showOriginalImageView.setImageBitmap(Utils.getScaleBitmapByBitmap(bitmapCamera, 512, 512));
                     break;
             }
