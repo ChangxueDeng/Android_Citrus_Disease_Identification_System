@@ -44,7 +44,7 @@ public class Utils {
         if (Build.VERSION.SDK_INT >= 24) {
             // 兼容性提升
             imageUri = FileProvider.getUriForFile(activity,
-                    "com.example.myapplication", outputImage);
+                    "com.example.shiju", outputImage);
         } else {
             imageUri = Uri.fromFile(outputImage);
         }
