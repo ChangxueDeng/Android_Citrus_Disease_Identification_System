@@ -22,10 +22,11 @@
         android:allowBackup="true"
         android:icon="@mipmap/citrus"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/citrus"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication"
+        android:theme="@style/AppTheme"
 
+        android:name=".XuiApplication"
         android:requestLegacyExternalStorage="true">
         <activity
             android:name=".MainActivity"

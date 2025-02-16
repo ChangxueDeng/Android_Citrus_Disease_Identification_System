@@ -1,6 +1,7 @@
 package com.example.shiju;
 import android.Manifest;
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,17 +26,27 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
+
+import com.xuexiang.xui.utils.XToastUtils;
+import com.xuexiang.xui.widget.actionbar.TitleBar;
+import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
+import com.xuexiang.xui.widget.imageview.RadiusImageView;
+import com.xuexiang.xui.widget.tabbar.EasyIndicator;
+import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
 
 import org.pytorch.Tensor;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     Bitmap bitmap = null;
     String modelPath = null;
@@ -56,9 +68,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUIRE_PERMISSION_CODE = 111;
 
     // 创建用于开启相机的按钮
-    private Button btnStartCamera;
+    private RoundButton btnStartCamera;
+    private RadiusImageView startCamera;
     // 创建用于调用系统相册的按钮
-    private Button btnStartAlbum;
+    private RoundButton btnStartAlbum;
 
     // 创建ImageView对象
     private ImageView showOriginalImageView;
@@ -66,39 +79,89 @@ public class MainActivity extends AppCompatActivity {
     private TextView showClsResultTextView;
     private Tensor TensorinTensor;
 
+    private final ClassFragment classFragment = new ClassFragment();
+    private final HelpFragment helpFragment = new HelpFragment();
 
+    private RadiusImageView radiusImageViewClass;
+    private RadiusImageView radiusImageViewHelp;
+    private TitleBar mtitleBar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         requestPermissions();
         setContentView(R.layout.activity_main);
         loadModel(this);
         // 绑定开启相机的按钮
-        btnStartCamera = (Button) findViewById(R.id.button1);
-        btnStartCamera.setOnClickListener(new StartCameraOnClickListener());
+//        btnStartCamera = (RoundButton) findViewById(R.id.button1);
+//        btnStartCamera.setOnClickListener(new StartCameraOnClickListener());
+        startCamera = findViewById(R.id.btn21);
+        startCamera.setOnClickListener(new StartCameraOnClickListener());
         // 绑定调用相册的按钮
-        btnStartAlbum = (Button) findViewById(R.id.button2);
-        btnStartAlbum.setOnClickListener(new StartAlbumOnClickListener());
+//        btnStartAlbum = (RoundButton) classFragment.getTip()
+//        btnStartAlbum.setOnClickListener(new StartAlbumOnClickListener());
 
         //  绑定我们在activity_main.xml中定义的Image_Viewa
-        showOriginalImageView = (ImageView) findViewById(R.id.img);
+//        showOriginalImageView = (ImageView)findViewById(R.id.img);
+//        SuperTextView superTextView = (SuperTextView)findViewById(R.id.classed);
+//        showClsResultTextView = superTextView.getLeftTextView();
 
-        showClsResultTextView = (TextView)findViewById(R.id.classed);
+        radiusImageViewClass = findViewById(R.id.btn11);
+        radiusImageViewHelp = findViewById(R.id.btn31);
+        //        一次性添加
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.main_container,classFragment)
+                .add(R.id.main_container,helpFragment)
+                .hide(helpFragment)
+                .commit();
+
+        findViewById(R.id.btn1).setOnClickListener(
+                (view)->{
+
+                    //                    显示fragment1,隐藏fragment2
+                    getSupportFragmentManager().beginTransaction()
+                            .hide(helpFragment)
+                            .show(classFragment)
+                            .commit();
+                    radiusImageViewHelp.setImageResource(R.drawable.light2);
+                    radiusImageViewClass.setImageResource(R.drawable.identify1);
+                }
+        );
+        findViewById(R.id.btn3).setOnClickListener(
+                (view)->{
+                    //                    显示fragment2,隐藏fragment1
+                    getSupportFragmentManager().beginTransaction()
+                            .hide(classFragment)
+                            .show(helpFragment)
+                            .commit();
+                    radiusImageViewClass.setImageResource(R.drawable.identify2);
+                    radiusImageViewHelp.setImageResource(R.drawable.light1);
+                }
+        );
+        mtitleBar = findViewById(R.id.titlebar2);
+        mtitleBar.addAction(new TitleBar.ImageAction(R.drawable.question_mark) {
+            @Override
+            public void performAction(View view) {
+                XToastUtils.toast("引导提示");
+            }
+        });
+
+
         //Log.i(TAG, cameraImagePath);
     }
 
     class StartCameraOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            if(showClsResultTextView.getTextSize() > 0){
-                showClsResultTextView.setText("等待分类");
-            }
             // 开启相机，返回相机拍摄图像的路径，传入的请求码是START_CAMERA_CODE
             cameraImagePath = Utils.startCamera(MainActivity.this, START_CAMERA_CODE);
 
         }
+    }
+    public void startAlbumFromFragment(){
+        Utils.startAlbum(MainActivity.this, START_ALBUM_CODE);
     }
 
     class StartAlbumOnClickListener implements View.OnClickListener {
@@ -182,7 +245,10 @@ public class MainActivity extends AppCompatActivity {
                     showImagePath = albumImagePath;
                     Bitmap bitmapAlbum = Utils.getScaleBitmapByPath(albumImagePath);
                     //showOriginalImageView.setImageBitmap(Utils.getScaleBitmapByBitmap(bitmapAlbum,512,512));
-                    showOriginalImageView.setImageBitmap(bitmapAlbum);
+//                    showOriginalImageView.setImageBitmap(bitmapAlbum);
+                    if (classFragment.isVisible()){
+                        classFragment.showImage(bitmapAlbum);
+                    }
                     Toast.makeText(MainActivity.this, "album start", Toast.LENGTH_LONG).show();
                     //图片路径存在则进行分类
                     if(check_Img_Selected(showImagePath))classing(showImagePath);
@@ -192,7 +258,10 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, "使用相机拍摄的照片");
                     showImagePath = cameraImagePath;
                     Bitmap bitmapCamera = Utils.getScaleBitmapByPath(cameraImagePath);
-                    showOriginalImageView.setImageBitmap(bitmapCamera);
+//                    showOriginalImageView.setImageBitmap(bitmapCamera);
+                    if (classFragment.isVisible()){
+                        classFragment.showImage(bitmapCamera);
+                    }
                     Toast.makeText(MainActivity.this, "camera start", Toast.LENGTH_LONG).show();
                     //图片路径存在则进行分类
                     if(check_Img_Selected(showImagePath))classing(showImagePath);
@@ -216,10 +285,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
+
     public void classing(String imgPth){
     // 获取需要分类的图像
         Bitmap bmp= null;
@@ -236,16 +302,9 @@ public class MainActivity extends AppCompatActivity {
         }
         Classifier classifier = new Classifier(modelPath);
         String ans = classifier.imgPredict(scaledBmp);
-        showClsResultTextView.setText(ans);
+//        showClsResultTextView.setText(ans);
     }
 
-//        //显示图片
-//        ImageView imageView = findViewById(R.id.image);
-//        imageView.setImageBitmap(bitmap);
-//        //显示结果
-//        TextView textView = findViewById(R.id.text);
-//        String tex = "推理结果：" + className;
-//        textView.setText(tex);
 
     /**
      * Copies specified asset to the file in /files app directory and returns this file absolute path.
@@ -271,46 +330,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    private void classify(String imagePath){
-//        //MobileNet 权重文件
-//        String ptPath = "mobile_net.pt";
-//        //设定输入维度
-//        int inDims[] = {150,150,3};
-//
-//        //省略模型加载与数据获取
-//
-//        //对输入图像预处理，获得输入张量
-//        float[] meanRGB = {0.485f,0.456f,0.406f};
-//        float[] stdRGB = {0.229f,0.224f,0.225f};
-//        Bitmap scaleBmp = null;
-//        TensorinTensor = TensorImageUtils.bitmapToFloat32Tensor(scaleBmp,meanRGB,stdRGB);
-//
-//        try {
-//            //进行分类计算
-//            TensorclsTensor = mobileNet.forward(IValue.from(inTensor)).toTensor();
-//            float[] clsArray = clsTensor.getDataAsFloatArray();
-//            softmax(clsArray);
-//
-//            //根据分类概率值，解析图像所属类别
-//            int[] top3id = getTopThree(clsArray);
-//
-//            //根据对应的4种图像分类，在文本框中显示前3种图像类别和对应概率值
-//            String[] cls = {"Citrus Black spot",
-//                    "Citrus Canker",
-//                    "Citrus Greening",
-//                    "Citrus Healthy"};
-//            String result = "Top 1:"+cls[top3id[0]]+","+String.valueOf(clsArray[top3id[0]]);
-//            result +="\n"+"Top 2:"+cls[top3id[1]]+","+String.valueOf(clsArray[top3id[1]]);
-//            result +="\n"+"Top 3:"+cls[top3id[2]]+","+String.valueOf(clsArray[top3id[2]]);
-//
-//            showClsResultTextView.setText(result);
-//        }catch (Exception e){
-//            Log.e("Log","fail to preform classify");
-//            e.printStackTrace();
-//        }
-//
-//
-//    }
 
     private static void softmax(float[] arr){
         float sumExp = 0.00001f;

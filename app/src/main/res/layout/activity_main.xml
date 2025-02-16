@@ -1,82 +1,232 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity"
     android:orientation="vertical">
-    <LinearLayout
+
+<!--    <com.xuexiang.xui.widget.layout.XUILinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:orientation="vertical"-->
+<!--        >-->
+
+<!--        &lt;!&ndash; 顶部栏 &ndash;&gt;-->
+<!--        <com.xuexiang.xui.widget.layout.XUILinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="80dp"-->
+<!--            >-->
+
+<!--            <com.xuexiang.xui.widget.actionbar.TitleBar-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                app:tb_titleText="标题"-->
+<!--                app:tb_sideTextSize="18sp"-->
+<!--                app:tb_titleTextColor="@color/white1" />-->
+
+<!--        </com.xuexiang.xui.widget.layout.XUILinearLayout>-->
+
+<!--        &lt;!&ndash; 图像显示部分 &ndash;&gt;-->
+<!--        <com.xuexiang.xui.widget.layout.XUILinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/green2"-->
+<!--            android:orientation="vertical"-->
+<!--            android:layout_weight="1"-->
+<!--            app:sUseRipple="false"-->
+<!--            >-->
+
+<!--            <com.xuexiang.xui.widget.imageview.RadiusImageView-->
+<!--                android:id="@+id/img"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:src="@mipmap/img_strart"-->
+<!--                app:riv_corner_radius="8dp"-->
+<!--                app:riv_border_color="@color/black" />-->
+<!--        </com.xuexiang.xui.widget.layout.XUILinearLayout>-->
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="1dp"-->
+<!--            android:background="@color/gray_btn" />-->
+<!--        &lt;!&ndash; 文本显示 &ndash;&gt;-->
+<!--        <com.xuexiang.xui.widget.layout.XUILinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/white1"-->
+<!--            android:orientation="vertical"-->
+<!--            >-->
+
+<!--            <com.xuexiang.xui.widget.textview.supertextview.SuperTextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="100dp"-->
+<!--                app:sLeftTopTextString="分类结果："-->
+<!--                app:sLeftTopTextSize="18sp"-->
+<!--                app:sLeftTopTextIsBold="true"-->
+<!--                android:id="@+id/classed"-->
+<!--                app:sLeftBottomTextSize="16sp"-->
+<!--                app:sLeftBottomTextIsBold="true"-->
+<!--                app:sRightBottomTextString="1111"-->
+<!--                app:sLeftBottomTextString="置信度："-->
+<!--                />-->
+
+<!--        </com.xuexiang.xui.widget.layout.XUILinearLayout>-->
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="1dp"-->
+<!--            android:background="@color/gray_btn" />-->
+
+<!--        &lt;!&ndash; 按钮 &ndash;&gt;-->
+<!--        <com.xuexiang.xui.widget.layout.XUILinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="110dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:background="@color/white1"-->
+<!--            >-->
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                />-->
+<!--            <com.xuexiang.xui.widget.button.shadowbutton.ShadowButton-->
+<!--                android:layout_width="100dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                app:sb_radius="50dp"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                app:sb_color_unpressed="@color/green1"-->
+<!--                android:layout_marginBottom="5dp" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                />-->
+
+<!--        </com.xuexiang.xui.widget.layout.XUILinearLayout>-->
+<!--    </com.xuexiang.xui.widget.layout.XUILinearLayout>-->
+
+    <com.xuexiang.xui.widget.actionbar.TitleBar
+        android:id="@+id/titlebar2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/img_t"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:textSize="20sp"
-            android:text="待分类照片:" />
-        <ImageView
-            android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/main_container"
+        app:tb_leftImageResource="@drawable/ic_navigation_back_white"
+        app:tb_actionPadding="20dp"
+        app:tb_centerGravity="center"
+        app:layout_constraintVertical_weight="0.7"
+        app:tb_titleText="柑橘病虫害识别系统"
+        app:tb_titleTextSize="22sp"
+
+        >
+    </com.xuexiang.xui.widget.actionbar.TitleBar>
+
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/titlebar2"
+        app:layout_constraintBottom_toTopOf="@id/dl1"
+        app:layout_constraintVertical_weight="7.3"
+        android:id="@+id/main_container"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/dl1"
+        app:layout_constraintTop_toBottomOf="@id/main_container"
+        app:layout_constraintBottom_toTopOf="@id/bottom_bar"
+        android:background="@color/gray_btn" />
+
+    <!-- 底部栏 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintTop_toBottomOf="@id/dl1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/white1"
+
+        >
+        <!-- 识别界面按钮 -->
+        <com.xuexiang.xui.widget.layout.XUILinearLayout
+            android:id="@+id/btn1"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:id="@+id/img"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_weight="0.5"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/class_t"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="分类结果:" />
-
-        <TextView
-            android:id="@+id/classed"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:textSize="40sp"
-            android:gravity="center_horizontal"
-            android:text="等待分类"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="350dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/button_update"
-            android:gravity="center"
-            android:text="拍照"
-            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:xui_radius="30dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:textSize="30sp" />
+            android:gravity="center"
+            app:layout_constraintRight_toLeftOf="@id/btn2">
 
-        <Button
-            android:textColor="@color/white"
-            android:background="@drawable/button_update"
-            android:layout_width="350dp"
+            <com.xuexiang.xui.widget.imageview.RadiusImageView
+                android:id="@+id/btn11"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/identify1"
+                >
+
+            </com.xuexiang.xui.widget.imageview.RadiusImageView>
+
+        </com.xuexiang.xui.widget.layout.XUILinearLayout>
+
+        <!-- 拍照按钮 -->
+        <com.xuexiang.xui.widget.layout.XUILinearLayout
+            android:id="@+id/btn2"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:id="@+id/button2"
-            android:layout_weight="1"
-            android:textSize="30sp"
-            android:text="相册"/>
-    </LinearLayout>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/btn1"
+            app:layout_constraintRight_toLeftOf="@id/btn3"
+            app:xui_radius="30dp"
+            android:background="@color/o3"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+
+            <com.xuexiang.xui.widget.imageview.RadiusImageView
+                android:id="@+id/btn21"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/camera01"/>
 
 
+        </com.xuexiang.xui.widget.layout.XUILinearLayout>
 
-</LinearLayout>
+        <!-- 建议界面按钮 -->
+        <com.xuexiang.xui.widget.layout.XUILinearLayout
+            android:id="@+id/btn3"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/btn2"
+            app:layout_constraintRight_toRightOf="parent"
+            app:xui_radius="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+           >
+
+            <com.xuexiang.xui.widget.imageview.RadiusImageView
+                android:id="@+id/btn31"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/light2"
+                />
+        </com.xuexiang.xui.widget.layout.XUILinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
