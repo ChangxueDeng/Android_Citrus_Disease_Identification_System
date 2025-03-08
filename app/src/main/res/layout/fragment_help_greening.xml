@@ -1,15 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HelpGreeningFragment"
-    android:background="#2196F3">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <!-- 标题 -->
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="柑橘黄龙病"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+        <!-- 简介按钮 -->
 
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center"
-        android:src="@drawable/classed" />
+        <com.xuexiang.xui.widget.layout.XUILinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:xui_radius="10dp"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="简介"
+                android:background="#3F51B5"
+                android:textColor="#fff"
+                android:gravity="center"
+                android:textSize="20sp" />
+        </com.xuexiang.xui.widget.layout.XUILinearLayout>
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/intro_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/greening_content"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"/>
+
+        <!-- 资源提交机构按钮 -->
+        <com.xuexiang.xui.widget.layout.XUILinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:xui_radius="10dp"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="症状"
+                android:background="#3F51B5"
+                android:textColor="#fff"
+                android:gravity="center"
+                android:textSize="20sp" />
+        </com.xuexiang.xui.widget.layout.XUILinearLayout>
+
+        <!-- 资源提交机构内容 -->
+        <TextView
+            android:id="@+id/resource_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/greening_symptoms"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp" />
+        <com.xuexiang.xui.widget.layout.XUILinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:xui_radius="10dp"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="防治方法"
+                android:background="#3F51B5"
+                android:textColor="#fff"
+                android:gravity="center"
+                android:textSize="20sp" />
+        </com.xuexiang.xui.widget.layout.XUILinearLayout>
+        <!-- 症状内容 -->
+        <TextView
+            android:id="@+id/symptom_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="@string/greening_method"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+</ScrollView>

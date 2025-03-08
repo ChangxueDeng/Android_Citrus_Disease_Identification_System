@@ -42,6 +42,7 @@ import com.xuexiang.xui.widget.button.roundbutton.RoundButton;
 import com.xuexiang.xui.widget.imageview.RadiusImageView;
 import com.xuexiang.xui.widget.tabbar.EasyIndicator;
 import com.xuexiang.xui.widget.textview.supertextview.SuperTextView;
+import com.yalantis.ucrop.UCrop;
 
 import org.pytorch.Tensor;
 
@@ -64,7 +65,8 @@ public class MainActivity extends AppCompatActivity{
     // 开启相机和调用相册的请求码
     private static final int START_CAMERA_CODE = 1111;
     private static final int START_ALBUM_CODE = 1112;
-    // 请求权限的请求码
+    // 新增图片裁切的请求码
+    private static final int CROP_IMAGE_CODE = 1113;    // 请求权限的请求码
     private static final int REQUIRE_PERMISSION_CODE = 111;
 
     // 创建用于开启相机的按钮
@@ -107,6 +109,7 @@ public class MainActivity extends AppCompatActivity{
 //        showOriginalImageView = (ImageView)findViewById(R.id.img);
 //        SuperTextView superTextView = (SuperTextView)findViewById(R.id.classed);
 //        showClsResultTextView = superTextView.getLeftTextView();
+
 
         radiusImageViewClass = findViewById(R.id.btn11);
         radiusImageViewHelp = findViewById(R.id.btn31);
@@ -153,6 +156,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     class StartCameraOnClickListener implements View.OnClickListener {
+
         @Override
         public void onClick(View v) {
             // 开启相机，返回相机拍摄图像的路径，传入的请求码是START_CAMERA_CODE
@@ -227,53 +231,46 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            Log.i(TAG, "进入选择相机或者相册环节 ");
-            Log.i(TAG, "接受到的请求码是" + requestCode);
-            switch (requestCode) {
-                case START_ALBUM_CODE:
-                    if (data == null) {
-                        Log.w("LOG", "user photo data is null");
-                        return;
-                    }
+@Override
+protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
 
-                    Uri albumImageUri = data.getData();
-                    albumImagePath = Utils.getPathFromUri(MainActivity.this, albumImageUri);
-                    showImagePath = albumImagePath;
-                    Bitmap bitmapAlbum = Utils.getScaleBitmapByPath(albumImagePath);
-                    //showOriginalImageView.setImageBitmap(Utils.getScaleBitmapByBitmap(bitmapAlbum,512,512));
-//                    showOriginalImageView.setImageBitmap(bitmapAlbum);
-                    if (classFragment.isVisible()){
-                        classFragment.showImage(bitmapAlbum);
-                    }
-                    Toast.makeText(MainActivity.this, "album start", Toast.LENGTH_LONG).show();
-                    //图片路径存在则进行分类
-                    if(check_Img_Selected(showImagePath))classing(showImagePath);
-                    else Toast.makeText(MainActivity.this, "图片为空，请重新操作！",Toast.LENGTH_LONG).show();
-                    break;
-                case START_CAMERA_CODE:
-                    Log.i(TAG, "使用相机拍摄的照片");
-                    showImagePath = cameraImagePath;
-                    Bitmap bitmapCamera = Utils.getScaleBitmapByPath(cameraImagePath);
-//                    showOriginalImageView.setImageBitmap(bitmapCamera);
-                    if (classFragment.isVisible()){
-                        classFragment.showImage(bitmapCamera);
-                    }
-                    Toast.makeText(MainActivity.this, "camera start", Toast.LENGTH_LONG).show();
-                    //图片路径存在则进行分类
-                    if(check_Img_Selected(showImagePath))classing(showImagePath);
-                    else Toast.makeText(MainActivity.this, "图片为空，请重新操作！",Toast.LENGTH_LONG).show();
-                    //showOriginalImageView.setImageBitmap(Utils.getScaleBitmapByBitmap(bitmapCamera, 512, 512));
-                    break;
-            }
+    if (resultCode == Activity.RESULT_OK) {
+        Log.i(TAG, "进入选择相机或者相册环节 ");
+        Log.i(TAG, "接受到的请求码是" + requestCode);
+        switch (requestCode) {
+            case START_ALBUM_CODE:
+                if (data == null) {
+                    Log.w("LOG", "user photo data is null");
+                    return;
+                }
+
+                Uri albumImageUri = data.getData();
+                albumImagePath = Utils.getPathFromUri(MainActivity.this, albumImageUri);
+                showImagePath = albumImagePath;
+
+                // 启动uCrop进行裁切
+                startCrop(Uri.fromFile(new File(albumImagePath)));
+
+                break;
+            case START_CAMERA_CODE:
+                Log.i(TAG, "使用相机拍摄的照片");
+                showImagePath = cameraImagePath;
+
+                // 启动uCrop进行裁切
+                startCrop(Uri.fromFile(new File(cameraImagePath)));
+
+                break;
+            // 处理uCrop的结果
+            case UCrop.REQUEST_CROP:
+                handleCropResult(data);
+                break;
         }
     }
+}
     public void loadModel(Context context){
         try {
-            modelPath = assetFilePath(context, "mobile_eff.pt");
+            modelPath = assetFilePath(context, "mobile.pt");
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -300,8 +297,17 @@ public class MainActivity extends AppCompatActivity{
         } catch (Exception e) {
             Log.d("LOG", "can not read image bitmap");
         }
-        Classifier classifier = new Classifier(modelPath);
-        String ans = classifier.imgPredict(scaledBmp);
+//        Classifier.initialize(modelPath);
+//        Classifier classifier = new Classifier(modelPath);
+//        String ans = classifier.imgPredict(scaledBmp);
+//        System.out.println(ans);
+
+        Classifier.PredictionResult result = Classifier.getInstance(modelPath).predictWithConfidence(scaledBmp);
+        // 将分类结果传递给ClassFragment
+        classFragment.showClassificationResult(result);
+        System.out.println("预测结果：" + result.getLabel());
+        System.out.println("置信度：" + result.getConfidence());
+        System.out.println("格式化输出：" + result.toString());
 //        showClsResultTextView.setText(ans);
     }
 
@@ -346,5 +352,44 @@ public class MainActivity extends AppCompatActivity{
             }
         }
     }
+    // 启动uCrop进行裁切
+    private void startCrop(Uri sourceUri) {
+        Uri destinationUri = Uri.fromFile(new File(getCacheDir(), "cropped_image.jpg"));
+        UCrop.Options options = new UCrop.Options();
+        options.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        options.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        options.setActiveControlsWidgetColor(ContextCompat.getColor(this, R.color.colorAccent));
+        options.setFreeStyleCropEnabled(true);
+        UCrop uCrop = UCrop.of(sourceUri, destinationUri)
+                .withOptions(options);
+        uCrop.start(this);
+    }
 
+    // 处理uCrop的结果
+    private void handleCropResult(Intent data) {
+        final Uri resultUri = UCrop.getOutput(data);
+        if (resultUri != null) {
+            showImagePath = resultUri.getPath();
+            Bitmap bitmap = Utils.getScaleBitmapByPath(showImagePath);
+            if (classFragment.isVisible()) {
+                classFragment.showImage(bitmap);
+            }
+
+            Toast.makeText(MainActivity.this, "裁切完成", Toast.LENGTH_LONG).show();
+            // 图片路径存在则进行分类
+            if (check_Img_Selected(showImagePath)) {
+                classFragment.resetResult();
+                classing(showImagePath);
+            } else {
+                Toast.makeText(MainActivity.this, "图片为空，请重新操作！", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(MainActivity.this, "裁切失败", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

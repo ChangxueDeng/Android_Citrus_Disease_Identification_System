@@ -7,7 +7,7 @@
       </SelectionState>
       <SelectionState runConfigName="Prediction-of-citrus-diseases-and-insect-pests app.Prediction-of-citrus-diseases-and-insect-pests_app.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-01-23T06:07:50.452700700Z">
+        <DropdownSelection timestamp="2025-02-22T07:30:04.131305600Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\ChangxueDeng\.android\avd\Medium_Phone.avd" />

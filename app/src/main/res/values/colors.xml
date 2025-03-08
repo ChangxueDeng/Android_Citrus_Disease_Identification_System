@@ -17,9 +17,13 @@
     <color name="title_color_1">#3F51B5</color>
 
     <color name="healthy">#81C784</color>
+    <color name="healthy_b">#CC81C784</color>
     <color name="black_spot">#565252</color>
+    <color name="black_spot_b">#CC565252</color>
     <color name="canker">#A25454</color>
+    <color name="canker_b">#CCA25454</color>
     <color name="greening">#FAE539</color>
+    <color name="greening_b">#CCFAE539</color>
 
     <color name="colorPrimary">#299EE3</color>
     <color name="colorPrimaryDark">#f7a503</color>

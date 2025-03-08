@@ -22,20 +22,38 @@
         >
 
         <!-- 图片 -->
-        <com.xuexiang.xui.widget.imageview.RadiusImageView
+<!--        <com.xuexiang.xui.widget.imageview.RadiusImageView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:riv_corner_radius="30dp"-->
+<!--            android:id="@+id/classedImage"-->
+<!--            android:src="@mipmap/img_strart"-->
+<!--            />-->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:riv_corner_radius="30dp"
-            android:id="@+id/classedImage"
-            android:src="@mipmap/img_strart"
-            />
+            android:layout_height="wrap_content">
+
+            <com.xuexiang.xui.widget.imageview.RadiusImageView
+                android:id="@+id/classedImage"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,4:4"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:riv_corner_radius="30dp"
+                android:src="@mipmap/img_strart"
+                android:scaleType="centerCrop"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <!-- tip -->
         <com.xuexiang.xui.widget.textview.supertextview.SuperTextView
             android:id="@+id/tip"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            app:sLeftTextString="请使用拍照按钮拍摄照片，或使用右侧按钮从相册选取照片"
+            app:sLeftTextString="使用拍照按钮拍摄或右侧按钮从相册选取照片"
             app:sLeftTextSize="12sp"
             app:sLeftMaxEms="100"
             app:sLeftLines="2"
@@ -60,48 +78,15 @@
         >
 
         <com.xuexiang.xui.widget.layout.XUILinearLayout
-            android:id="@+id/cate1"
+            android:id="@+id/cate0"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/cate2"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/cate1"
             android:background="@color/white1"
-            app:xui_shadowElevation="2dp"
-            app:xui_shadowAlpha="0.35"
-            app:xui_radius="30dp"
-            android:padding="5dp"
             android:layout_marginStart="10dp"
-            app:layout_constraintHorizontal_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            >
-            <com.xuexiang.xui.widget.imageview.RadiusImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/healthy"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="健康"
-                android:textSize="16sp"
-                android:gravity="center"
-                />
-
-        </com.xuexiang.xui.widget.layout.XUILinearLayout>
-
-        <com.xuexiang.xui.widget.layout.XUILinearLayout
-            android:id="@+id/cate2"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/cate3"
-            app:layout_constraintLeft_toRightOf="@+id/cate1"
-            android:background="@color/white1"
-            android:layout_marginStart="5dp"
             app:xui_shadowElevation="2dp"
             app:xui_shadowAlpha="0.35"
             app:xui_radius="30dp"
@@ -125,12 +110,12 @@
         </com.xuexiang.xui.widget.layout.XUILinearLayout>
 
         <com.xuexiang.xui.widget.layout.XUILinearLayout
-            android:id="@+id/cate3"
+            android:id="@+id/cate1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/cate2"
-            app:layout_constraintRight_toLeftOf="@id/cate4"
+            app:layout_constraintLeft_toRightOf="@id/cate0"
+            app:layout_constraintRight_toLeftOf="@id/cate2"
             app:layout_constraintBottom_toBottomOf="parent"
             android:background="@color/white1"
             app:xui_shadowElevation="2dp"
@@ -158,19 +143,18 @@
         </com.xuexiang.xui.widget.layout.XUILinearLayout>
 
         <com.xuexiang.xui.widget.layout.XUILinearLayout
-            android:id="@+id/cate4"
+            android:id="@+id/cate2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/cate3"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/cate1"
+            app:layout_constraintRight_toLeftOf="@+id/cate3"
             android:background="@color/white1"
             app:xui_shadowElevation="2dp"
             app:xui_shadowAlpha="0.35"
             app:xui_radius="30dp"
             android:layout_marginStart="5dp"
-            android:layout_marginEnd="10dp"
             android:padding="5dp"
             app:layout_constraintHorizontal_weight="1"
             android:orientation="vertical"
@@ -190,6 +174,44 @@
                 />
 
         </com.xuexiang.xui.widget.layout.XUILinearLayout>
+
+        <com.xuexiang.xui.widget.layout.XUILinearLayout
+            android:id="@+id/cate3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/cate2"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@color/white1"
+            app:xui_shadowElevation="2dp"
+            app:xui_shadowAlpha="0.35"
+            app:xui_radius="30dp"
+            android:padding="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintHorizontal_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+            <com.xuexiang.xui.widget.imageview.RadiusImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/healthy"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="健康"
+                android:textSize="16sp"
+                android:gravity="center"
+                />
+
+        </com.xuexiang.xui.widget.layout.XUILinearLayout>
+
+
+
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -230,6 +252,7 @@
                 android:layout_weight="1"
                 />
             <TextView
+                android:id="@+id/resultShow"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -258,6 +281,7 @@
                 android:layout_weight="1"
                 />
             <TextView
+                android:id="@+id/topCent"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
